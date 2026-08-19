@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose your plan — compact</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --brand: #1F4DD3;
+    --brand-hover: #1A42B8;
+    --gray-900: #101828;
+    --gray-700: #344054;
+    --gray-600: #475467;
+    --gray-500: #667085;
+    --gray-300: #D0D5DD;
+    --gray-200: #EAECF0;
+    --gray-100: #F2F4F7;
+    --gray-50: #F9FAFB;
+    --white: #FFFFFF;
+    --success: #12B76A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #E4E7EC;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+
+  .frame-label {
+    font-size: 12px;
+    color: var(--gray-600);
+    font-weight: 500;
+  }
+
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: var(--gray-50);
+    border-radius: 40px;
+    border: 10px solid #1D2939;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 60px rgba(16, 24, 40, 0.24);
+  }
+
+  .header {
+    flex-shrink: 0;
+    height: 56px;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .logo-dot {
+    width: 24px; height: 24px; border-radius: 7px;
+    background: linear-gradient(135deg, var(--brand), #4B6FE0);
+  }
+  .product-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--gray-100);
+    color: var(--brand);
+    font-size: 13px; font-weight: 600;
+    padding: 5px 10px; border-radius: 8px;
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .bell { width: 20px; height: 20px; color: var(--gray-500); }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--brand); color: var(--white);
+    font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  .page-head { margin-bottom: 14px; }
+  .page-title { font-size: 20px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.02em; }
+  .page-sub { font-size: 13px; color: var(--gray-500); margin-top: 2px; line-height: 1.4; }
+
+  .toggle {
+    display: inline-flex;
+    background: var(--gray-100);
+    border-radius: 10px;
+    padding: 3px;
+    margin: 12px 0 14px;
+  }
+  .toggle button {
+    border: none; background: transparent;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    color: var(--gray-500);
+    padding: 6px 16px; border-radius: 7px; cursor: pointer;
+  }
+  .toggle button.active {
+    background: var(--white); color: var(--brand);
+    box-shadow: 0 1px 2px rgba(16,24,40,0.1);
+  }
+
+  .cards { display: flex; flex-direction: column; gap: 12px; }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .card.recommended { border-color: var(--brand); border-width: 1.5px; }
+
+  .card-head {
+    padding: 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .card-toprow {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 8px;
+  }
+  .card-name-wrap { display: flex; flex-direction: column; gap: 2px; }
+  .card-name-line { display: flex; align-items: center; gap: 8px; }
+  .card-name { font-size: 16px; font-weight: 700; color: var(--gray-900); }
+  .badge {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--brand); background: #EBF0FC;
+    padding: 2px 7px; border-radius: 5px;
+  }
+  .card-tagline { font-size: 12px; color: var(--gray-500); }
+
+  .card-price { text-align: right; white-space: nowrap; }
+  .price-amount { font-size: 22px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.02em; }
+  .price-period { font-size: 12px; color: var(--gray-500); font-weight: 500; }
+
+  .card-cta {
+    margin-top: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn {
+    flex: 1;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    padding: 10px; border-radius: 9px; border: none; cursor: pointer;
+    text-align: center;
+  }
+  .btn-primary { background: var(--brand); color: var(--white); }
+  .btn-primary:hover { background: var(--brand-hover); }
+  .btn-current {
+    background: var(--gray-100); color: var(--gray-500);
+    cursor: default;
+  }
+  .btn-outline {
+    background: var(--white); color: var(--brand);
+    border: 1px solid var(--gray-300);
+  }
+  .chevron {
+    width: 20px; height: 20px; color: var(--gray-400, #98A2B3);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .card.open .chevron { transform: rotate(180deg); }
+
+  .card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+  .card.open .card-body { max-height: 520px; }
+
+  .card-body-inner {
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--gray-100);
+    margin-top: 4px;
+    padding-top: 12px;
+  }
+  .incl-label {
+    font-size: 12px; font-weight: 600; color: var(--gray-700);
+    margin-bottom: 8px;
+  }
+  .feat { display: flex; align-items: flex-start; gap: 8px; padding: 4px 0; }
+  .feat svg { width: 16px; height: 16px; color: var(--brand); flex-shrink: 0; margin-top: 1px; }
+  .feat span { font-size: 13px; color: var(--gray-600); line-height: 1.4; }
+
+  .enterprise .card-name { font-size: 16px; }
+  .lets-talk { font-size: 18px; font-weight: 700; color: var(--gray-900); }
+</style>
+</head>
+<body>
+  <div class="frame-label">Collapsed state — all four plans fit in 844px, zero scroll</div>
+  <div class="phone">
+    <div class="header">
+      <div class="header-left">
+        <div class="logo-dot"></div>
+        <div class="product-pill">
+          WebCommander
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+      </div>
+      <div class="header-right">
+        <svg class="bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="avatar">MC</div>
+      </div>
+    </div>
+
+    <div class="scroll">
+      <div class="page-head">
+        <div class="page-title">Choose your plan</div>
+        <div class="page-sub">Upgrade or downgrade anytime. Changes are prorated to your next invoice.</div>
+      </div>
+
+      <div class="toggle">
+        <button class="active">Monthly</button>
+        <button>Annual</button>
+      </div>
+
+      <div class="cards">
+
+        <div class="card" data-plan="startup">
+          <div class="card-head" onclick="toggle(this)">
+            <div class="card-toprow">
+              <div class="card-name-wrap">
+                <div class="card-name-line"><span class="card-name">Startup</span></div>
+                <div class="card-tagline">Launch and sell for free</div>
+              </div>
+              <div class="card-price">
+                <div class="price-amount">$0</div>
+                <div class="price-period">forever</div>
+              </div>
+            </div>
+            <div class="card-cta">
+              <button class="btn btn-current">Current plan</button>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-body-inner">
+              <div class="incl-label">What's included</div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>$1,000 sales / month</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>5,000 page views / month</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>1 GB storage</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>5 AI credits / day (30 / month)</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Core analytics only</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card recommended open" data-plan="pro">
+          <div class="card-head" onclick="toggle(this)">
+            <div class="card-toprow">
+              <div class="card-name-wrap">
+                <div class="card-name-line"><span class="card-name">Professional</span><span class="badge">Recommended</span></div>
+                <div class="card-tagline">Grow without limits</div>
+              </div>
+              <div class="card-price">
+                <div class="price-amount">$50</div>
+                <div class="price-period">/ month</div>
+              </div>
+            </div>
+            <div class="card-cta">
+              <button class="btn btn-primary">Upgrade</button>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-body-inner">
+              <div class="incl-label">All Startup features plus</div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>$10,000 sales / month</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Unlimited page views</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>100 GB storage</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>100 AI credits / day · unlimited monthly</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Full analytics — no restrictions</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Custom domain · no badge · version history</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-plan="premium">
+          <div class="card-head" onclick="toggle(this)">
+            <div class="card-toprow">
+              <div class="card-name-wrap">
+                <div class="card-name-line"><span class="card-name">Premium</span></div>
+                <div class="card-tagline">10 users</div>
+              </div>
+              <div class="card-price">
+                <div class="price-amount">$350</div>
+                <div class="price-period">/ month</div>
+              </div>
+            </div>
+            <div class="card-cta">
+              <button class="btn btn-primary">Upgrade</button>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-body-inner">
+              <div class="incl-label">All Professional features plus</div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>$100,000 sales / month</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Unlimited storage</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>1,000 AI credits / day · unlimited monthly</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>5 collaborator seats</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Power Pack — $1,000+ of tools included</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card enterprise" data-plan="enterprise">
+          <div class="card-head" onclick="toggle(this)">
+            <div class="card-toprow">
+              <div class="card-name-wrap">
+                <div class="card-name-line"><span class="card-name">Enterprise</span></div>
+                <div class="card-tagline">Tailored for scale</div>
+              </div>
+              <div class="card-price">
+                <div class="lets-talk">Let's talk</div>
+              </div>
+            </div>
+            <div class="card-cta">
+              <button class="btn btn-outline">Contact sales</button>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-body-inner">
+              <div class="incl-label">All Premium features plus</div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Custom limits, storage, and page views</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dedicated success manager</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>SLA and priority support</span></div>
+              <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Custom integrations and API</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<script>
+  function toggle(head) {
+    const card = head.parentElement;
+    const wasOpen = card.classList.contains('open');
+    document.querySelectorAll('.card.open').forEach(c => c.classList.remove('open'));
+    if (!wasOpen) card.classList.add('open');
+  }
+</script>
+</body>
+</html>

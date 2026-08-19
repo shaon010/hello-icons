@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pages approval lock — free plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #1F4DD3;
+    --brand-050: #EEF2FE;
+    --gray-25: #FCFCFD;
+    --gray-50: #F9FAFB;
+    --gray-100: #F2F4F7;
+    --gray-200: #EAECF0;
+    --gray-300: #D0D5DD;
+    --gray-400: #98A2B3;
+    --gray-500: #667085;
+    --gray-600: #475467;
+    --gray-700: #344054;
+    --gray-900: #101828;
+    --white: #FFFFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #E7E9EE;
+    color: var(--gray-900);
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 20px;
+  }
+  .stage {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .col-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    letter-spacing: 0.01em;
+  }
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: var(--white);
+    border-radius: 44px;
+    box-shadow: 0 0 0 11px #1A1A1C, 0 0 0 13px #2E2E30, 0 30px 60px rgba(16,24,40,0.28);
+    position: relative;
+    overflow: hidden;
+  }
+  .notch {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 140px; height: 30px;
+    background: #1A1A1C;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    z-index: 40;
+  }
+  .statusbar {
+    height: 54px;
+    padding: 0 26px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-900);
+  }
+  .statusbar .icons { display: flex; gap: 6px; align-items: center; }
+  .home-indicator {
+    position: absolute;
+    bottom: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 134px; height: 5px;
+    border-radius: 3px;
+    background: var(--gray-900);
+    opacity: 0.85;
+    z-index: 40;
+  }
+  .icon { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-sm { width: 18px; height: 18px; }
+  .icon-lg { width: 26px; height: 26px; }
+
+  .menu-header {
+    padding: 8px 20px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .menu-id { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .avatar-square {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: #DCEBFF;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--brand);
+    flex-shrink: 0;
+  }
+  .menu-name { font-size: 17px; font-weight: 700; color: var(--gray-900); line-height: 1.2; }
+  .menu-mail { font-size: 13px; color: var(--gray-500); line-height: 1.4; }
+  .menu-actions { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .bell { position: relative; color: var(--gray-700); }
+  .bell .dot {
+    position: absolute; top: -1px; right: -1px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #F04438; border: 1.5px solid var(--white);
+  }
+  .avatar-round {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, #F2B8A2, #C98B76);
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--gray-400);
+    padding: 18px 22px 8px;
+  }
+  .menu-group {
+    margin: 0 16px 16px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+  }
+  .menu-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 16px;
+    cursor: pointer;
+  }
+  .menu-row + .menu-row { border-top: 1px solid var(--gray-100); }
+  .menu-row:active { background: var(--gray-50); }
+  .row-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ic-blue { background: #E7EDFF; color: var(--brand); }
+  .ic-green { background: #E3F5EC; color: #12B76A; }
+  .ic-purple { background: #EFE9FF; color: #7A5AF8; }
+  .ic-amber { background: #FEF3E3; color: #F79009; }
+  .ic-red { background: #FEECEC; color: #F04438; }
+  .row-label { flex: 1; font-size: 16px; font-weight: 500; color: var(--gray-900); }
+  .row-right { display: flex; align-items: center; gap: 8px; color: var(--gray-400); }
+  .lock-hint { color: var(--gray-400); display: flex; align-items: center; }
+
+  .page-topbar {
+    padding: 8px 20px 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .page-back { color: var(--gray-900); display: flex; }
+  .page-title { font-size: 22px; font-weight: 700; color: var(--gray-900); }
+  .search {
+    margin: 0 16px 4px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    color: var(--gray-400);
+    font-size: 15px;
+  }
+  .scroll { height: calc(844px - 54px - 62px); overflow-y: auto; padding-bottom: 30px; }
+  .scroll::-webkit-scrollbar { display: none; }
+
+  .lock-card {
+    margin: 16px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(16,24,40,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .lock-card::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, var(--brand-050) 0%, rgba(238,242,254,0) 60%);
+    pointer-events: none;
+  }
+  .lock-top { display: flex; align-items: center; gap: 12px; position: relative; }
+  .lock-badge {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--brand);
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+  }
+  .plan-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600;
+    color: var(--brand);
+    background: var(--brand-050);
+    border: 1px solid #D6E0FB;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+  }
+  .lock-heading { font-size: 17px; font-weight: 700; color: var(--gray-900); margin: 16px 0 6px; position: relative; }
+  .lock-body { font-size: 14px; line-height: 1.55; color: var(--gray-600); position: relative; }
+  .lock-cta {
+    margin-top: 16px;
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--brand);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 15px; font-weight: 600;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+  }
+  .lock-cta:active { background: #1A41B4; }
+
+  .list-label {
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.06em; color: var(--gray-400);
+    padding: 14px 22px 6px;
+  }
+  .page-card {
+    margin: 0 16px 12px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+  }
+  .pc-name { font-size: 17px; font-weight: 700; color: var(--gray-900); margin-bottom: 10px; }
+  .pc-meta { font-size: 14px; color: var(--gray-500); margin-bottom: 4px; }
+  .pc-meta b { color: var(--gray-900); font-weight: 600; }
+  .pc-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--gray-100);
+  }
+  .pc-date { font-size: 13px; color: var(--gray-400); }
+  .pc-view { font-size: 14px; font-weight: 600; color: var(--brand); cursor: pointer; }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <div class="col">
+      <div class="col-label">Menu — count pill removed</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="icons">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 17l0 -4"/><path d="M9 17l0 -8"/><path d="M14 17l0 -6"/><path d="M19 17l0 -11"/></svg>
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 18l.01 0"/><path d="M9.172 15.172a4 4 0 0 1 5.656 0"/><path d="M6.343 12.343a8 8 0 0 1 11.314 0"/><path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0"/></svg>
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 7m0 2a2 2 0 0 1 2 -2h11a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-11a2 2 0 0 1 -2 -2z"/><path d="M18 10l2 0l0 4l-2 0"/></svg>
+          </span>
+        </div>
+
+        <div class="menu-header">
+          <div class="menu-id">
+            <div class="avatar-square">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+            </div>
+            <div>
+              <div class="menu-name">That's Awesome</div>
+              <div class="menu-mail">awesome@webcommander.com</div>
+            </div>
+          </div>
+          <div class="menu-actions">
+            <div class="bell">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>
+              <span class="dot"></span>
+            </div>
+            <div class="avatar-round"></div>
+          </div>
+        </div>
+
+        <div class="section-label">GENERAL</div>
+        <div class="menu-group">
+          <div class="menu-row">
+            <div class="row-icon ic-blue">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>
+            </div>
+            <div class="row-label">Visit site</div>
+            <div class="row-right"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></svg></div>
+          </div>
+          <div class="menu-row">
+            <div class="row-icon ic-green">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 16v.01"/><path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483"/></svg>
+            </div>
+            <div class="row-label">Help</div>
+            <div class="row-right"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></svg></div>
+          </div>
+          <div class="menu-row">
+            <div class="row-icon ic-purple">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/></svg>
+            </div>
+            <div class="row-label">Pages</div>
+            <div class="row-right">
+              <span class="lock-hint"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg></span>
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-row">
+            <div class="row-icon ic-amber">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+            </div>
+            <div class="row-label">Trash</div>
+            <div class="row-right"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></svg></div>
+          </div>
+          <div class="menu-row">
+            <div class="row-icon ic-red">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg>
+            </div>
+            <div class="row-label">Logout</div>
+            <div class="row-right"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-label">Pages — approval capability locked</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="icons">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 17l0 -4"/><path d="M9 17l0 -8"/><path d="M14 17l0 -6"/><path d="M19 17l0 -11"/></svg>
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 18l.01 0"/><path d="M9.172 15.172a4 4 0 0 1 5.656 0"/><path d="M6.343 12.343a8 8 0 0 1 11.314 0"/><path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0"/></svg>
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 7m0 2a2 2 0 0 1 2 -2h11a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-11a2 2 0 0 1 -2 -2z"/><path d="M18 10l2 0l0 4l-2 0"/></svg>
+          </span>
+        </div>
+
+        <div class="page-topbar">
+          <div class="page-back">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+          </div>
+          <div class="page-title">Pages</div>
+        </div>
+
+        <div class="scroll">
+          <div class="search">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 0 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+            <span>Search pages...</span>
+          </div>
+
+          <div class="lock-card">
+            <div class="lock-top">
+              <div class="lock-badge">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg>
+              </div>
+              <span class="plan-chip">
+                <svg class="icon" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="M12 3l3.5 5.5l6 1.5l-4 4.5l.5 6l-6 -2.5l-6 2.5l.5 -6l-4 -4.5l6 -1.5z"/></svg>
+                Professional
+              </span>
+            </div>
+            <div class="lock-heading">Page approvals</div>
+            <div class="lock-body">Require review before pages go live. Upgrade to Professional to set an approval step for your team.</div>
+            <button class="lock-cta">
+              Upgrade to Professional
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>
+            </button>
+          </div>
+
+          <div class="list-label">ALL PAGES</div>
+
+          <div class="page-card">
+            <div class="pc-name">Home</div>
+            <div class="pc-meta">Author: <b>nqa707.mywebcommander.com</b></div>
+            <div class="pc-meta">Visibility: <b>Open</b></div>
+            <div class="pc-foot">
+              <span class="pc-date">Oct 12, 2026 10:34</span>
+              <span class="pc-view">View</span>
+            </div>
+          </div>
+
+          <div class="page-card">
+            <div class="pc-name">About us</div>
+            <div class="pc-meta">Author: <b>nqa707.mywebcommander.com</b></div>
+            <div class="pc-meta">Visibility: <b>Open</b></div>
+            <div class="pc-foot">
+              <span class="pc-date">Oct 12, 2026 10:34</span>
+              <span class="pc-view">View</span>
+            </div>
+          </div>
+
+          <div class="page-card">
+            <div class="pc-name">Category</div>
+            <div class="pc-meta">Author: <b>Jane Smith</b></div>
+            <div class="pc-meta">Visibility: <b>Open</b></div>
+            <div class="pc-foot">
+              <span class="pc-date">Oct 12, 2026 10:34</span>
+              <span class="pc-view">View</span>
+            </div>
+          </div>
+
+          <div class="page-card">
+            <div class="pc-name">Shop</div>
+            <div class="pc-meta">Author: <b>Marcus Chen</b></div>
+            <div class="pc-meta">Visibility: <b>Open</b></div>
+            <div class="pc-foot">
+              <span class="pc-date">Oct 12, 2026 10:34</span>
+              <span class="pc-view">View</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
