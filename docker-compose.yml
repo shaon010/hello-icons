@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-change-me}
+      - "SESSION_SECRET=${SESSION_SECRET:?set SESSION_SECRET in .env, e.g. via openssl rand -base64 32}"
+    volumes:
+      - data:/app/data
+      - uploads:/app/public/icons/uploads
+
+volumes:
+  data:
+  uploads:
