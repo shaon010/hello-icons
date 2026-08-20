@@ -1,13 +1,7 @@
 "use client";
 
 import Image from "next/image";
-
-interface IconItem {
-  id: number;
-  name: string;
-  category: string;
-  svg: string;
-}
+import type { IconItem } from "@/types/icon";
 
 interface IconModalProps {
   isOpen: boolean;
@@ -23,7 +17,7 @@ export default function IconModal({
   if (!isOpen || !icon) return null;
 
   const downloadSVG = async () => {
-    const response = await fetch(icon.svg);
+    const response = await fetch(icon.svgPath);
     const svg = await response.text();
 
     const blob = new Blob([svg], { type: "image/svg+xml" });
@@ -38,7 +32,7 @@ export default function IconModal({
   };
 
   const copySVG = async () => {
-    const response = await fetch(icon.svg);
+    const response = await fetch(icon.svgPath);
     const svg = await response.text();
 
     await navigator.clipboard.writeText(svg);
@@ -49,7 +43,7 @@ export default function IconModal({
     const code = `import Image from "next/image";
 
 <Image
-  src="${icon.svg}"
+  src="${icon.svgPath}"
   alt="${icon.name}"
   width={24}
   height={24}
@@ -70,7 +64,7 @@ export default function IconModal({
         {/* Header */}
         <div className="flex items-center justify-between border-b p-6">
           <div>
-            <p className="text-sm text-gray-500">{icon.category}</p>
+            <p className="text-sm text-gray-500">{icon.category.name}</p>
             <h2 className="text-3xl font-bold">{icon.name}</h2>
           </div>
 
@@ -87,7 +81,7 @@ export default function IconModal({
           {/* Preview */}
           <div className="flex items-center justify-center rounded-xl border bg-gray-50 p-10">
             <Image
-              src={icon.svg}
+              src={icon.svgPath}
               alt={icon.name}
               width={220}
               height={220}
@@ -144,7 +138,7 @@ export default function IconModal({
 {`import Image from "next/image";
 
 <Image
-  src="${icon.svg}"
+  src="${icon.svgPath}"
   alt="${icon.name}"
   width={24}
   height={24}

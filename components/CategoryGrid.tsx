@@ -1,57 +1,9 @@
 import Link from "next/link";
+import { getCategories } from "@/lib/data/categories";
 
-const categories = [
-  {
-    name: "Business",
-    icon: "💼",
-    count: "2,450 Icons",
-    href: "/categories/business",
-  },
-  {
-    name: "Technology",
-    icon: "💻",
-    count: "1,980 Icons",
-    href: "/categories/technology",
-  },
-  {
-    name: "Finance",
-    icon: "💰",
-    count: "1,320 Icons",
-    href: "/categories/finance",
-  },
-  {
-    name: "Medical",
-    icon: "🏥",
-    count: "980 Icons",
-    href: "/categories/medical",
-  },
-  {
-    name: "Education",
-    icon: "🎓",
-    count: "1,120 Icons",
-    href: "/categories/education",
-  },
-  {
-    name: "Social",
-    icon: "📱",
-    count: "850 Icons",
-    href: "/categories/social",
-  },
-  {
-    name: "Shopping",
-    icon: "🛒",
-    count: "730 Icons",
-    href: "/categories/shopping",
-  },
-  {
-    name: "Travel",
-    icon: "✈️",
-    count: "640 Icons",
-    href: "/categories/travel",
-  },
-];
+export default async function CategoryGrid() {
+  const categories = await getCategories();
 
-export default function CategoryGrid() {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -75,12 +27,12 @@ export default function CategoryGrid() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
             <Link
-              key={category.name}
-              href={category.href}
+              key={category.id}
+              href={`/categories/${category.slug}`}
               className="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             >
               <div className="text-5xl mb-5">
-                {category.icon}
+                {category.emoji ?? "🔷"}
               </div>
 
               <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600">
@@ -88,7 +40,7 @@ export default function CategoryGrid() {
               </h3>
 
               <p className="mt-2 text-gray-500">
-                {category.count}
+                {category.iconCount} {category.iconCount === 1 ? "Icon" : "Icons"}
               </p>
 
               <div className="mt-6 text-blue-600 font-medium">
