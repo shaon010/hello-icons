@@ -89,6 +89,7 @@ check_status() {
   fi
 }
 
+check_status "/api/health" 200 "GET /api/health"
 check_status "/" 200 "GET /"
 check_status "/icons" 200 "GET /icons"
 check_status "/categories" 200 "GET /categories"
