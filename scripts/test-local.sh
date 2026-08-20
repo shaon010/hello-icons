@@ -1,28 +1,31 @@
 #!/usr/bin/env bash
-# Smoke-test the app locally: install deps, set up the DB, boot `next dev`,
-# and hit the key routes to make sure nothing is broken.
+# Smoke-test the app locally: install deps, set up the DB, restart `next dev`,
+# and hit the key routes to make sure nothing is broken. Leaves the dev server
+# running afterwards (pass or fail) so it can be checked in a browser.
 set -uo pipefail
 
 cd "$(dirname "$0")/.."
 
 PORT="${PORT:-3000}"
 BASE_URL="http://localhost:${PORT}"
-SERVER_LOG="$(mktemp -t hello-icons-dev.XXXXXX.log)"
-SERVER_PID=""
+SERVER_LOG="${TMPDIR:-/tmp}/hello-icons-dev.log"
 FAILED=0
-
-cleanup() {
-  if [[ -n "$SERVER_PID" ]] && kill -0 "$SERVER_PID" 2>/dev/null; then
-    kill "$SERVER_PID" 2>/dev/null
-    wait "$SERVER_PID" 2>/dev/null
-  fi
-}
-trap cleanup EXIT
 
 pass() { echo "  PASS  $1"; }
 fail() { echo "  FAIL  $1"; FAILED=1; }
 
 echo "== Setup =="
+
+EXISTING_PIDS="$(lsof -ti:"$PORT" 2>/dev/null || true)"
+if [[ -n "$EXISTING_PIDS" ]]; then
+  echo "  stopping app already running on port ${PORT} (pid ${EXISTING_PIDS})..."
+  kill $EXISTING_PIDS 2>/dev/null
+  for _ in $(seq 1 10); do
+    lsof -ti:"$PORT" >/dev/null 2>&1 || break
+    sleep 1
+  done
+  lsof -ti:"$PORT" 2>/dev/null | xargs -r kill -9 2>/dev/null
+fi
 
 if [[ ! -f .env ]]; then
   cp .env.example .env
@@ -47,8 +50,9 @@ if npm run lint --silent; then pass "lint"; else fail "lint"; fi
 echo
 echo "== Starting dev server =="
 
-npm run dev -- --port "$PORT" >"$SERVER_LOG" 2>&1 &
+nohup npm run dev -- --port "$PORT" >"$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
+disown
 
 echo "  waiting for ${BASE_URL} (pid ${SERVER_PID})..."
 READY=0
@@ -96,7 +100,9 @@ echo
 if [[ "$FAILED" -eq 0 ]]; then
   echo "All checks passed."
 else
-  echo "Some checks failed. Full server log: $SERVER_LOG"
+  echo "Some checks failed."
 fi
+echo "Dev server is still running at ${BASE_URL} (pid ${SERVER_PID}). Log: $SERVER_LOG"
+echo "Stop it with: kill ${SERVER_PID}"
 
 exit "$FAILED"
