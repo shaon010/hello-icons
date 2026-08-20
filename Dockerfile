@@ -3,6 +3,10 @@
 # --- deps: install node_modules + generate the Prisma client ---
 FROM node:22-alpine AS deps
 WORKDIR /app
+# @prisma/adapter-better-sqlite3 pulls in its own nested better-sqlite3 build,
+# which falls back to compiling from source via node-gyp when its
+# prebuild-install download fails — these are needed for that fallback.
+RUN apk add --no-cache python3 make g++
 COPY package.json package-lock.json ./
 COPY prisma ./prisma
 COPY prisma.config.ts ./
